@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Account Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px gray;
+            border-radius: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #banking-section {
+            margin-top: 20px;
+        }
+        p {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to Secure Bank</h2>
+
+        <!-- Account Creation Form -->
+        <div id="create-account">
+            <h3>Create Account</h3>
+            <input type="text" id="new-username" placeholder="Enter Username" required>
+            <input type="password" id="new-password" placeholder="Enter Password" required>
+            <button onclick="createAccount()">Create Account</button>
+            <p id="create-msg"></p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login">
+            <h3>Login</h3>
+            <input type="text" id="login-username" placeholder="Enter Username" required>
+            <input type="password" id="login-password" placeholder="Enter Password" required>
+            <button onclick="login()">Login</button>
+            <p id="login-msg"></p>
+        </div>
+
+        <!-- Banking Section -->
+        <div id="banking-section" style="display: none;">
+            <h3>Banking Dashboard</h3>
+            <p><strong>Welcome, <span id="user-name"></span>!</strong></p>
+            <p>Current Balance: $<span id="balance">0</span></p>
+
+            <input type="number" id="amount" placeholder="Enter Amount">
+            <button onclick="deposit()">Deposit</button>
+            <button onclick="withdraw()">Withdraw</button>
+            <p id="bank-msg"></p>
+
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        let users = {}; // Store user data (temporary storage)
+        let currentUser = null;
+
+        function createAccount() {
+            let username = document.getElementById("new-username").value;
+            let password = document.getElementById("new-password").value;
+
+            if (username in users) {
+                document.getElementById("create-msg").innerHTML = "Username already exists!";
+                document.getElementById("create-msg").style.color = "red";
+            } else if (username && password) {
+                users[username] = { password: password, balance: 0 };
+                document.getElementById("create-msg").innerHTML = "Account created successfully!";
+                document.getElementById("create-msg").style.color = "green";
+            } else {
+                document.getElementById("create-msg").innerHTML = "Please enter all details.";
+                document.getElementById("create-msg").style.color = "red";
+            }
+        }
+
+        function login() {
+            let username = document.getElementById("login-username").value;
+            let password = document.getElementById("login-password").value;
+
+            if (username in users && users[username].password === password) {
+                currentUser = username;
+                document.getElementById("user-name").innerText = currentUser;
+                document.getElementById("balance").innerText = users[currentUser].balance;
+                
+                document.getElementById("login").style.display = "none";
+                document.getElementById("create-account").style.display = "none";
+                document.getElementById("banking-section").style.display = "block";
+            } else {
+                document.getElementById("login-msg").innerHTML = "Invalid username or password!";
+                document.getElementById("login-msg").style.color = "red";
+            }
+        }
+
+        function deposit() {
+            let amount = parseFloat(document.getElementById("amount").value);
+
+            if (amount > 0) {
+                users[currentUser].balance += amount;
+                document.getElementById("balance").innerText = users[currentUser].balance;
+                document.getElementById("bank-msg").innerHTML = "Deposit successful!";
+                document.getElementById("bank-msg").style.color = "green";
+            } else {
+                document.getElementById("bank-msg").innerHTML = "Enter a valid amount!";
+                document.getElementById("bank-msg").style.color = "red";
+            }
+        }
+
+        function withdraw() {
+            let amount = parseFloat(document.getElementById("amount").value);
+
+            if (amount > 0 && users[currentUser].balance >= amount) {
+                users[currentUser].balance -= amount;
+                document.getElementById("balance").innerText = users[currentUser].balance;
+                document.getElementById("bank-msg").innerHTML = "Withdrawal successful!";
+                document.getElementById("bank-msg").style.color = "green";
+            } else {
+                document.getElementById("bank-msg").innerHTML = "Insufficient funds or invalid amount!";
+                document.getElementById("bank-msg").style.color = "red";
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById("login").style.display = "block";
+            document.getElementById("create-account").style.display = "block";
+            document.getElementById("banking-section").style.display = "none";
+        }
+    </script>
+</body>
+</html>
