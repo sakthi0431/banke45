@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone HTML Repo') {
             steps {
-                git 'https://github.com/sakthib/my-html-site.git'
+                git 'https://github.com/sakthi0431/banke45.git'
             }
         }
 
