@@ -1,12 +1,16 @@
-pipeline {
+
+   pipeline {
     agent any
 
     stages {
         stage('Clone HTML Repo') {
             steps {
-                git 'https://github.com/sakthi0431/banke45.git'
+                git credentialsId: 'github-credentials', url: 'https://github.com/sakthi0431/banke45.git', branch: 'main'
             }
         }
+    }
+}
+
 
         stage('Deploy to Tomcat') {
             steps {
